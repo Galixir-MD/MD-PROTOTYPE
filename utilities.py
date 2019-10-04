@@ -10,35 +10,67 @@ def sorted_pair(a, b):
     else:
         return [a, b]
 
-def make_angles(bonds):
-    """
-    A function to find the new_bonds base on shared atoms
-    
-    :type  bonds: list
-    :param bonds: A list of bonds from pdb file
-
-    return new_bonds: a list of bonds that have shared atoms. 
-    """
-
-    new_bonds = []
-    N = len(bonds)
+def make_angles(conect):
+    newconn = []
+    N = len(conect)
+    print("There are %d bonds" % ( N ))
     for i in range(N):
-        bonds[i] = sorted_pair(bonds[i][0], bonds[i][1])
+        conect[i] = sorted_pair(conect[i][0], conect[i][1])
 
     for i in range(N):
-        bond = bonds[i]
-        for j in range(i+1, N):
-            new_bond = bonds[j]
-            if(bond[0] == new_bond[0] and bond[1] != new_bond[1]):
-                new_bonds.append(sorted_pair(bond[1], new_bond[1]))
-            elif(bond[1] == new_bond[0] and bond[0] != new_bond[1]):
-                new_bonds.append(sorted_pair(bond[0], new_bond[1]))
-            elif (bond[0] == new_bond[1] and bond[1] != new_bond[0]):
-                new_bonds.append(sorted_pair(bond[1], new_bond[0]))
-            elif (bond[1] == new_bond[1] and bond[0] != new_bond[0]):
-                new_bonds.append(sorted_pair(bond[0], new_bond[0]))
+        c = conect[i]
+        i1 = i+1
+        for j in range(i1, N):
+            d = conect[j]
+            if (c[0] == d[0] and not c[1] == d[1]):
+                newconn.append(sorted_pair(c[1], d[1]))
+            elif (c[1] == d[0] and not c[0] == d[1]):
+                newconn.append(sorted_pair(c[0], d[1]))
+            elif (c[0] == d[1] and not c[1] == d[0]):
+                newconn.append(sorted_pair(c[1], d[0]))
+            elif (c[1] == d[1] and not c[0] == d[0]):
+                newconn.append(sorted_pair(c[0], d[0]))
+    print("There are %d angles" % ( len(newconn) ))
+    for n in newconn:
+        conect.append(n)
+    sorted_con = sorted(conect)
+    print("There are %d conect" % ( len(sorted_con) ) )
+    return sorted_con
     
-    return sorted(new_bonds)
+# def make_angles(bonds):
+#     """
+#     A function to find the new_bonds base on shared atoms
+    
+#     :type  bonds: list
+#     :param bonds: A list of bonds from pdb file
+
+#     return new_bonds: a list of bonds that have shared atoms. 
+#     """
+
+#     new_bonds = []
+#     N = len(bonds)
+#     print("There are %d bonds" % ( N ))
+#     for i in range(N):
+#         bonds[i] = sorted_pair(bonds[i][0], bonds[i][1])
+
+#     for i in range(N):
+#         bond = bonds[i]
+#         for j in range(i+1, N):
+#             new_bond = bonds[j]
+#             if(bond[0] == new_bond[0] and bond[1] != new_bond[1]):
+#                 new_bonds.append(sorted_pair(bond[1], new_bond[1]))
+#             elif(bond[1] == new_bond[0] and bond[0] != new_bond[1]):
+#                 new_bonds.append(sorted_pair(bond[0], new_bond[1]))
+#             elif (bond[0] == new_bond[1] and bond[1] != new_bond[0]):
+#                 new_bonds.append(sorted_pair(bond[1], new_bond[0]))
+#             elif (bond[1] == new_bond[1] and bond[0] != new_bond[0]):
+#                 new_bonds.append(sorted_pair(bond[0], new_bond[0]))
+#     print("There are %d angles" % ( len(new_bonds) ))
+#     for bond in new_bonds:
+#         bonds.append(bond)
+#     sorted_con = sorted(bond)
+#     print("There are %d conect" % ( len(sorted_con) ) )
+#     return sorted_con
 
 def make_exclusion(N, bonds):
     """

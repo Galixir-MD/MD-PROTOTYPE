@@ -1,7 +1,7 @@
 import numpy as np
 import math
 import sys
-
+import time
 
 def distance_pbc(box, x1, x2):
     dx = []
@@ -77,11 +77,30 @@ def calculate_nonbonded_forces(box, coords, elems, exclude, force, sigma, epsilo
     return energy, force
 
 def calculate_forces(box, coords, elems, bonds, exclude, ff):
+    """
+    A function to calculate force for all atoms
 
+    :type  box: list
+    :param box: [a, b, c, alpha, beta, gamma] for box size
+
+    :type  coords: list
+    :param coords: coordinates for all atoms
+
+    :type  elems: list
+    :param elems: a list of elements with their name
+
+    :type  bonds: list
+    :param bonds: list of bond with atom indexes
+    """
     # initialize forces
     force = [[0.0, 0.0, 0.0] for i in range(len(coords))]
 
+    start_time_bonded = time.time()
     bonded_energy, force = calculate_bonded_forces(box, coords, elems, bonds, force, ff["bond_length"], ff["bond_force_const"])
+    print('time for bonded force: ', time.time() - start_time_bonded)
+
+    start_time_nonbonded = time.time()
     nonbonded_energy, force = calculate_nonbonded_forces(box, coords, elems, exclude, force, ff["sigma"], ff["epsilon"], ff["charge"])
+    print('time for nonbonded force: ', time.time() - start_time_nonbonded)
 
     return bonded_energy + nonbonded_energy, force
